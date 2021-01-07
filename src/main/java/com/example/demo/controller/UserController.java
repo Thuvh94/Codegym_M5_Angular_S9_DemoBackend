@@ -14,25 +14,26 @@ import java.util.Optional;
 @RestController
 // Đảm bảo dự án khác thì vẫn gọi được đến API của mình.
 @CrossOrigin("*")
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     private IUserService iUserService;
     // Find all users
-    @RequestMapping(value = "/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Iterable allUser() {
         return iUserService.findAll();
     }
 
     // Create users
-    @RequestMapping(value = "/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public User createUser(@RequestBody User user) {
         return iUserService.save(user);
     }
 
     // Delete users
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         Optional<User> user = iUserService.findById(id);
         if (user == null) {
@@ -43,7 +44,7 @@ public class UserController {
     }
 
     // Update users
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public User editSmartphone(@PathVariable Long id, @RequestBody User user) {
         user.setId(id);
@@ -51,7 +52,7 @@ public class UserController {
     }
 
     // User detail
-    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public User userDetail(@PathVariable Long id) {
         return iUserService.findById(id).get();
